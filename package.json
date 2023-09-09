@@ -2,14 +2,19 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "pkgroll",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "migrate": "drizzle-kit generate:sqlite",
+    "db:push": "drizzle-kit push:sqlite"
   },
   "exports": "./dist/index.js",
   "dependencies": {
     "@hono/node-server": "^1.1.0",
+    "better-sqlite3": "^8.6.0",
+    "drizzle-orm": "^0.28.6",
     "hono": "^3.5.4"
   },
   "devDependencies": {
+    "drizzle-kit": "^0.19.13",
     "pkgroll": "^1.11.0",
     "tsx": "^3.12.2"
   }

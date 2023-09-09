@@ -1,0 +1,25 @@
+
+@host = http://localhost:8000
+### Create People
+POST {{host}}/peoples
+Content-Type: application/json
+
+{
+    "name":"Snoopy",
+    "email":"snoopy@test.co",
+    "phone":"+ 123000 789"
+}
+
+### List peoples
+GET {{host}}/peoples
+
+
+### Update people
+PUT {{host}}/peoples/1
+Content-Type: application/json
+
+{
+    "name":"Charlie Brown",
+    "email":"charlie@test.co",
+    "phone":"+ 123000 789"
+}
