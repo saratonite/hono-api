@@ -1,11 +1,13 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { basicAuth } from "hono/basic-auth";
-import { eq } from "drizzle-orm";
 import { greet } from "./lib/msg";
-import { db, people } from "./lib/db";
+import models from "./models";
+import { poweredBy } from "./middlewares";
 
 const app = new Hono();
+
+app.use("*", poweredBy);
 app.get("/", (c) => c.text("Hello Hono!"));
 
 // JSON Response
@@ -19,16 +21,15 @@ app.get(
 );
 
 app.get("/peoples", async (c) => {
-  let peoples = await db.select().from(people);
+  let peoples = await models.people.list();
 
-  console.log("peoples", peoples);
   return c.json({ peoples });
 });
 
 app.post("/peoples", async (c) => {
   let body = await c.req.json();
 
-  let _people = await db.insert(people).values(body).returning();
+  let _people = await models.people.create(body);
 
   return c.json(_people);
 });
@@ -37,11 +38,7 @@ app.put("/peoples/:id", async (c) => {
   let id = c.req.param("id");
   let body = await c.req.json();
 
-  let _people = await db
-    .update(people)
-    .set(body)
-    .where(eq(people.id, Number(id)))
-    .returning();
+  let _people = await models.people.updateById(Number(id), body);
 
   return c.json(_people);
 });
