@@ -1,9 +1,12 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { basicAuth } from "hono/basic-auth";
+import { zValidator } from "@hono/zod-validator";
+import { z } from "zod";
 import { greet } from "./lib/msg";
-import models from "./models";
+import models, { CreateInput } from "./models";
 import { poweredBy } from "./middlewares";
+import { people } from "./lib/db";
 
 const app = new Hono();
 
@@ -26,20 +29,43 @@ app.get("/peoples", async (c) => {
   return c.json({ peoples });
 });
 
-app.post("/peoples", async (c) => {
-  let body = await c.req.json();
+// Create new
+app.post(
+  "/peoples",
+  zValidator(
+    "json",
+    z.object({
+      name: z.string().nonempty(),
+      email: z.string().email(),
+      phone: z.string().optional().default(""),
+    })
+  ),
+  async (c) => {
+    let body = await c.req.valid("json");
 
-  let _people = await models.people.create(body);
+    let _people = await models.people.create(body as CreateInput);
 
-  return c.json(_people);
-});
+    return c.json(_people);
+  }
+);
 
 app.put("/peoples/:id", async (c) => {
   let id = c.req.param("id");
+
   let body = await c.req.json();
 
   let _people = await models.people.updateById(Number(id), body);
 
+  return c.json(_people);
+});
+
+app.delete("/peoples/:id", async (c) => {
+  let id = c.req.param("id");
+  let _people = await models.people.remove(Number(id));
+
+  if (!_people) {
+    return c.json({ message: "Not found." }, 404);
+  }
   return c.json(_people);
 });
 

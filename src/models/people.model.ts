@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
-import { db, people, People } from "../lib/db";
+import { db, people, People } from "~/lib/db";
 
-type CreateInput = Omit<People, "id">;
+export type CreateInput = Omit<People, "id">;
 async function create(data: CreateInput) {
   let _people = await db.insert(people).values(data).returning().get();
   return _people;
@@ -21,8 +21,19 @@ async function list() {
   return peoples;
 }
 
+async function remove(id: number) {
+  let _people = await db
+    .delete(people)
+    .where(eq(people.id, Number(id)))
+    .returning()
+    .get();
+
+  return _people;
+}
+
 export default {
   create,
   updateById,
   list,
+  remove,
 };

@@ -5,9 +5,10 @@ POST {{host}}/peoples
 Content-Type: application/json
 
 {
-    "name":"Snoopy",
-    "email":"snoopy@test.co",
-    "phone":"+ 123000 789"
+    "name":"Linus",
+    "email":"linus@tes.com",
+    "phone":"+ 123000 666",
+    "ssj":"sw"
 }
 
 ### List peoples
@@ -23,3 +24,6 @@ Content-Type: application/json
     "email":"charlie@test.co",
     "phone":"+ 123000 789"
 }
+
+### Delete 
+DELETE {{host}}/peoples/8
