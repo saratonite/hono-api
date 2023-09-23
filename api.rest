@@ -5,9 +5,9 @@ POST {{host}}/peoples
 Content-Type: application/json
 
 {
-    "name":"Linus",
-    "email":"linus@tes.com",
-    "phone":"+ 123000 666",
+    "name":"Pig Pen",
+    "email":"pigpen@tes.com",
+    "phone":"+ 123000 777",
     "ssj":"sw"
 }
 
